@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+  echo -e "\e[1m\e[31m""error: numero de argumentos""\e[0m" 1>&2
+  echo "argumentos: nombre para el fichero ejecutable" 1>&2
+  exit 1
+fi
+
+NAME=$1;
+
+#echo "gcc ""-o "$NAME "-Wall -Wshadow" $(ls | egrep "*.c$")
+
+#echo "  --compilacion--"
+echo -e "\e[1m\e[32m""gcc -c -Wall -Wshadow -g "$(ls | egrep "*.c$")"\e[0m"
+
+if gcc -c -Wall -Wshadow -g $(ls | egrep "*.c$"); then
+  #echo "  --enlazado--"
+  echo -e "\e[1m\e[32m""gcc -g -o "$NAME $(ls | egrep "*.o$")"\e[0m"
+  if ! gcc -g -o $NAME $(ls | egrep "*.o$")
+  then
+    echo -e "\e[1m\e[31m""error de enlazado""\e[0m" 1>&2
+    exit 1
+  fi
+else
+  echo -e "\e[1m\e[31m""error de compilacion""\e[0m" 1>&2
+  exit 1
+fi
+
+#echo "  --OK--"
+exit 0
